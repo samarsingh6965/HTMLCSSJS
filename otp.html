@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <style>
+        body {
+            width: 100vw;
+            height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            width: 300px;
+            margin: 0;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .otp-input {
+            text-align: center;
+        }
+
+        .verifyOTPContainer {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            width: 300px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .error {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        #mobile {
+            width: 277px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #otpSection {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #sendOTPBtn:disabled {
+            background-color: #ccc;
+        }
+
+        #resendBtn {
+            background-color: #007BFF;
+        }
+
+        #resendBtn:disabled {
+            background-color: #ccc;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Enter Mobile Number</h2>
+        <input type="text" id="mobile" placeholder="Mobile Number">
+        <span class="error" id="mobileError" style="color: red;"></span>
+        <button id="sendOTPBtn">Send OTP</button>
+        <div id="otpSection" style="display: none;">
+            <h2>Enter OTP</h2>
+            <div class="verifyOTPContainer">
+                <input type="text" id="otp1" class="otp-input" maxlength="1">
+                <input type="text" id="otp2" class="otp-input" maxlength="1">
+                <input type="text" id="otp3" class="otp-input" maxlength="1">
+                <input type="text" id="otp4" class="otp-input" maxlength="1">
+                <input type="text" id="otp5" class="otp-input" maxlength="1">
+                <input type="text" id="otp6" class="otp-input" maxlength="1">
+            </div>
+            <span class="error" id="otpError" style="color: red;"></span>
+            <button id="verifyOTPBtn">Verify OTP</button>
+            <p id="timer">Time left: 60 seconds</p>
+            <button id="resendBtn">Resend OTP</button>
+        </div>
+    </div>
+
+    <script>
+        const sendOTPBtn = document.getElementById('sendOTPBtn');
+        const otpSection = document.getElementById('otpSection');
+        const verifyOTPBtn = document.getElementById('verifyOTPBtn');
+        const timerElement = document.getElementById('timer');
+        const resendBtn = document.getElementById('resendBtn');
+        const mobileError = document.getElementById('mobileError');
+        const otpError = document.getElementById('otpError');
+
+        let countdown;
+
+        sendOTPBtn.addEventListener('click', async () => {
+            const mobile = document.getElementById('mobile').value;
+            if (isValidNumber(mobile)) {
+                // Simulate OTP sending. In a real application, this would be handled on the server.
+                otpSection.style.display = 'block';
+                startCountdown(60);
+                let data = await sendOTP(mobile); // Simulate OTP sending
+            } else {
+                errorElement.textContent = 'Please Enter a valid mobile number';
+            }
+        });
+
+
+        // controlling focus of input according to it's length
+        document.getElementById('otp1').addEventListener('input', function () {
+            const otp1 = this.value;
+            if (otp1.length === 1) {
+                document.getElementById('otp2').focus();
+            }
+        });
+        document.getElementById('otp2').addEventListener('input', function () {
+            const otp2 = this.value;
+            if (otp2.length === 1) {
+                document.getElementById('otp3').focus();
+            }
+        });
+        document.getElementById('otp3').addEventListener('input', function () {
+            const otp3 = this.value;
+            if (otp3.length === 1) {
+                document.getElementById('otp4').focus();
+            }
+        });
+        document.getElementById('otp4').addEventListener('input', function () {
+            const otp4 = this.value;
+            if (otp4.length === 1) {
+                document.getElementById('otp5').focus();
+            }
+        });
+        document.getElementById('otp5').addEventListener('input', function () {
+            const otp5 = this.value;
+            if (otp5.length === 1) {
+                document.getElementById('otp6').focus();
+            }
+        });
+        document.getElementById('otp6').addEventListener('keydown', function (event) {
+            if (event.key === 'Backspace' && !this.value) {
+                document.getElementById('otp5').focus();
+            }
+        });
+        document.getElementById('otp5').addEventListener('keydown', function (event) {
+            if (event.key === 'Backspace' && !this.value) {
+                document.getElementById('otp4').focus();
+            }
+        });
+        document.getElementById('otp4').addEventListener('keydown', function (event) {
+            if (event.key === 'Backspace' && !this.value) {
+                document.getElementById('otp3').focus();
+            }
+        });
+        document.getElementById('otp3').addEventListener('keydown', function (event) {
+            if (event.key === 'Backspace' && !this.value) {
+                document.getElementById('otp2').focus();
+            }
+        });
+        document.getElementById('otp2').addEventListener('keydown', function (event) {
+            if (event.key === 'Backspace' && !this.value) {
+                document.getElementById('otp1').focus();
+            }
+        });
+        // controlling focus of input according to it's length
+
+        verifyOTPBtn.addEventListener('click', async () => {
+            const mobile = document.getElementById('mobile').value;
+            const otp1 = document.getElementById('otp1').value;
+            const otp2 = document.getElementById('otp2').value;
+            const otp3 = document.getElementById('otp3').value;
+            const otp4 = document.getElementById('otp4').value;
+            const otp5 = document.getElementById('otp5').value;
+            const otp6 = document.getElementById('otp6').value;
+            const otp = `${otp1}${otp2}${otp3}${otp4}${otp5}${otp6}`;
+            if (isValidOTP(otp)) {
+                let data = await verifyOTP(mobile, otp)
+                console.log("data", data);
+                stopCountdown();
+                if (data?.data?.type === "success") {
+                    alert('Login Successful');
+                    window.location.href = '/';
+                } else {
+                    alert(data?.data?.message);
+                }
+            } else {
+                otpError.textContent = 'Enter valid OTP'//change the message according to you
+            }
+
+        });
+
+        resendBtn.addEventListener('click', async () => {
+            // Simulate OTP resend. In a real application, this would be handled on the server.
+            let otp = await sendOTP(document.getElementById('mobile').value);
+            startCountdown(60);
+        });
+
+        function startCountdown(seconds) {
+            console.log(seconds)
+            sendOTPBtn.disabled = true;
+            clearInterval(countdown);
+            let remainingTime = seconds;
+            updateTimerText(remainingTime);
+
+            countdown = setInterval(() => {
+                remainingTime--;
+                updateTimerText(remainingTime);
+
+                if (remainingTime <= 0) {
+                    stopCountdown();
+                    resendBtn.disabled = false;
+                }
+            }, 1000);
+
+            resendBtn.disabled = true;
+        }
+
+        function stopCountdown() {
+            clearInterval(countdown);
+            timerElement.innerText = '';
+            resendBtn.disabled = false;
+        }
+        function updateTimerText(seconds) {
+            timerElement.innerText = `Time left: ${seconds} seconds`;
+        }
+        // number validation
+        document.getElementById('mobile').addEventListener('input', function () {
+            const mobile = this.value;
+            if (isValidNumber(mobile)) {
+                resetErrorMessages();
+            } else {
+                mobileError.textContent = 'Please enter valid 10-digit number';//change the message according to you
+            }
+        });
+        function isValidNumber(input) {
+            return /^[6789]\d{9}$/.test(input);
+        }
+
+        // OTP Valdation
+        const otpInputs = [
+            document.getElementById('otp1'),
+            document.getElementById('otp2'),
+            document.getElementById('otp3'),
+            document.getElementById('otp4'),
+            document.getElementById('otp5'),
+            document.getElementById('otp6'),
+        ];
+
+        const validationResults = new Array(otpInputs.length).fill(true);
+        function validateOTPInput(input, index) {
+            const value = input.value;
+            const isValid = /^\d$/.test(value); // Check if it's a single digit
+            if (!isValid) {
+                validationResults[index] = false;
+            } else {
+                validationResults[index] = true;
+            }
+        }
+
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('input', () => {
+                validateOTPInput(input, index);
+                if(validationResults.includes(false)){
+                    otpError.textContent = 'Enter Valid Input';
+                }else{
+                    resetErrorMessages();
+                }
+            });
+        });
+
+        function isValidOTP(input) {
+            console.log(validatedInputs)
+            return /^\d{6}$/.test(input);
+        }
+        // Function to reset error messages
+        function resetErrorMessages() {
+            document.getElementById('mobileError').textContent = '';
+            for (let i = 1; i <= 6; i++) {
+                document.getElementById(`otpError`).textContent = '';
+            }
+        }
+
+        // Simulated OTP sending function
+        function sendOTP(mobile) {
+            return getAPI(`https://egramswarajportal.dhwaniris.in/otp/send_otp.php?mobile=${mobile}`, { method: 'GET' });
+        }
+        // Simulated OTP sending function
+        function verifyOTP(mobile, otp) {
+            return getAPI(`https://egramswarajportal.dhwaniris.in/otp/send_otp.php?mobile=${mobile}&otp=${otp}`)
+        }
+
+        function getAPI(url) {
+            return new Promise((resolve, reject) => {
+                fetch(url, { method: 'GET' }).then((response) => {
+                    if (!response.ok) {
+                        reject('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                    .then((data) => {
+                        resolve(data)
+                    })
+                    .catch((error) => {
+                        // Handle errors here
+                        console.error('There was a problem with the fetch operation:', error);
+                        reject(error)
+                    });
+            })
+        }
+    </script>
+</body>
+
+</html>
