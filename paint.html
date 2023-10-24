@@ -3,160 +3,154 @@
 
 <head>
     <title>Simple Drawing App</title>
+    <link rel="shortcut icon" href="./Assets/paintfavicon.png" type="image/x-icon">
     <style>
         @keyframes jumpAnimation {
-    0% {
-        transform: translateY(0);
-    }
+            0% {
+                transform: translateY(0);
+            }
 
-    50% {
-        transform: translateY(-20px);
-    }
+            50% {
+                transform: translateY(-20px);
+            }
 
-    100% {
-        transform: translateY(0);
-    }
-}
+            100% {
+                transform: translateY(0);
+            }
+        }
 
-#canvas {
-    border: 1px;
-    border: solid lightpink;
-    position: relative;
-    overflow: hidden;
-    background-color: #FFFFFF;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-}
+        .main {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            height: 100vh;
+            padding: 10px 20px;
+        }
 
-.color-circle {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    margin-right: 4px;
-    cursor: pointer;
+        #canvas {
+            width: 100%;
+            height: 100%;
+            border: 1px;
+            border: solid lightpink;
+            overflow: hidden;
+            background-color: #FFFFFF;
+        }
 
-}
+        .color-circle {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 4px;
+            cursor: pointer;
 
-h1 {
-    top: 10px;
-    margin-left: 300px;
-    color: pink;
-    font-size: 40px;
-    animation: jumpAnimation 3s infinite;
-
-}
-
-
+        }
 
 
-.controls {
-    margin-top: 10px;
-    color: lightpink;
-    font-size: 18px;
-    font-family: cursive;
-}
+        .controls {
+            margin-top: 10px;
+            color: lightpink;
+            font-size: 18px;
+            font-family: cursive;
+        }
 
-.slider-container {
-    display: flex;
-    align-items: center;
-}
+        .slider-container {
+            display: flex;
+            align-items: center;
+        }
 
-.slider-label {
-    margin-right: 10px;
-}
+        .slider-label {
+            margin-right: 10px;
+        }
 
-.slider {
-    width: 700px;
-    appearance: none;
-    background: lightpink;
-    outline: 1PX;
-    height: 1px;
-    border-radius: 50px;
-    overflow: block;
-}
+        .slider {
+            width: 700px;
+            appearance: none;
+            background: lightpink;
+            outline: 1PX;
+            height: 1px;
+            border-radius: 50px;
+            overflow: block;
+        }
 
-.slider::-webkit-slider-thumb {
-    appearance: none;
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: lightpink;
-    cursor: pointer;
-}
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: lightpink;
+            cursor: pointer;
+        }
 
-.slider::-moz-range-thumb {
-    width: 5px;
-    height: 12px;
-    border-radius: 50%;
-    background: black;
-    cursor: pointer;
-}
+        .slider::-moz-range-thumb {
+            width: 5px;
+            height: 12px;
+            border-radius: 50%;
+            background: black;
+            cursor: pointer;
+        }
 
-.eraser-button {
-    display: inline-block;
-    border-radius: 10px;
-    padding: 5px 10px;
-    background-color: lightpink;
-    cursor: pointer;
-    font-size: 16px;
-    font-family: cursive;
-    color: #FFFFFF;
-}
+        .eraser-button {
+            padding: 5px 25px;
+            background-color: lightpink;
+            margin-top: 6px;
+            font-size: 16px;
+            color: mistyrose;
+            border: none;
+            border-radius: 5%
+        }
 
-.zoom-buttons {
-    position: absolute;
-    top: 65px;
-    right: 10px;
-    display: flex;
-    flex-direction: column;
-}
-#colors{
-    height: auto;
-    width: 730px;
-    gap: 5px;
-    display: flex;
-    flex-wrap: wrap;
-}
+        .zoom-buttons {
+            display: flex;
+            width: 100%;
+            gap: 20px;
+            padding: 10px 50px;
+        }
+
+        #colors {
+            height: auto;
+            width: 730px;
+            gap: 5px;
+            display: flex;
+            flex-wrap: wrap;
+        }
     </style>
 </head>
 
 <body>
-    <h1>I Art It!</h1>
-    <canvas id="canvas" width="730" height="300"></canvas>
-    <div>
-        <div class="eraser-button" onclick="setEraser()">
-            eraser
-        </div>
+    <div class="main">
         <!-- colors will render here -->
         <div id="colors"></div>
-    </div>
-    <div class="controls">
-        <div class="slider-container">
-            <label for="penThickness" class="slider-label">Pen :</label> <input type="range" id="penThickness" min="1"
-                max="100" value="1" class="slider" onchange="setPenThickness(this.value)">
-        </div>
-        <div class="slider-container">
-            <label for="eraserSize" class="slider-label">Eraser</label> <input type="range" id="eraserSize" min="1"
-                max="100" value="1" class="slider" onchange="setEraserSize(this.value)">
-        </div>
-        <div class="slider-container">
-            <label for="capacitySlider">Color Opacity</label> <input type="range" id="capacitySlider" min="0" max="100"
-                value="100">
-        </div>
-        <div class="zoom-buttons">
-            <button onclick="zoomIn()"
-                style="padding: 5px 5px; background-color: lightpink; margin-top: 6px; font-size: 16px; color: mistyrose; border: none; border-radius: 1000px">+</button>
-            <button onclick="zoomOut()"
-                style="padding: 5px 5px; background-color: lightpink; margin-top: 6px; font-size: 16px; color: mistyrose; border: none; border-radius: 1000px">-</button>
-            <button onclick="undo()"
-                style="padding: 5px 5px; background-color: lightpink; margin-top: 6px; font-size: 16px; color: mistyrose; border: none; border-radius: 1000px; cursor: pointer;">↺</button>
-            <button onclick="redo()"
-                style="padding: 5px 5px; background-color: lightpink; margin-top: 6px; color: mistyrose; font-size: 16px; border: none; border-radius: 1000px;cursor: pointer;">↻</button>
-            <button id="theme-button()"
-                style="padding: 5px 5px; background-color: mistyrose; margin-top: 6px; font-size: 16px; color: lightpink; border: none; border-radius: 1000px"
-                onclick="toggleDropdown()">Theme</button>
-            <div id="theme-dropdown" style="display: none;">
-                <select id="theme-select" onchange="changeTheme()">
+        <div class="controls">
+            <div class="slider-container">
+                <label for="penThickness" class="slider-label">Pen :</label> <input type="range" id="penThickness"
+                    min="1" max="100" value="1" class="slider" onchange="setPenThickness(this.value)">
+            </div>
+            <div class="slider-container">
+                <label for="eraserSize" class="slider-label">Eraser</label> <input type="range" id="eraserSize" min="1"
+                    max="100" value="1" class="slider" onchange="setEraserSize(this.value)">
+            </div>
+            <div class="slider-container">
+                <label for="capacitySlider">Color Opacity</label> <input type="range" id="capacitySlider" min="0"
+                    max="100" value="100">
+            </div>
+            <div class="zoom-buttons">
+                <div class="eraser-button" onclick="setEraser()">eraser</div>
+                <button onclick="zoomIn()" class="eraser-button">+</button>
+                <button onclick="zoomOut()" class="eraser-button">-</button>
+                <button onclick="undo()" class="eraser-button">↺</button>
+                <button onclick="redo()" class="eraser-button">↻</button>
+                <select id="theme-select" onchange="changeTheme(event)" class="eraser-button" style="outline:none">
+                    <option value="" selected disabled>Select Theme</option>
                     <option value="white">Light</option>
                     <option value="black">Dark</option>
                     <option value="lavenderblush">Coquette</option>
@@ -167,152 +161,152 @@ h1 {
                     <option value="lightcyan">Etheral</option>
                     <option value="lemonchiffon">Soft</option>
                 </select>
-
-                <script>
-                    var canvas = document.getElementById("canvas");
-                    var ctx = canvas.getContext("2d");
-                    var isDrawing = false;
-                    var color = "black";
-                    var penThickness = 1;
-                    var eraserSize = 1;
-                    var zoom = 1;
-                    var drawingHistory = [];
-                    var currentStep = -1;
-
-                    canvas.addEventListener("mousedown", startDrawing);
-                    canvas.addEventListener("mousemove", draw);
-                    canvas.addEventListener("mouseup", stopDrawing);
-                    canvas.addEventListener("mouseleave", stopDrawing);
-                    // add colors if you want to add new color 
-                    // to render colors
-                    const colorMapper = ['white', 'lavender', 'lightblue', 'lightgreen', 'lightpink', 'yellow', 'peachpuff',
-                        'thistle', 'lightgray', 'wheat', 'mistyrose', 'lavenderblush', 'indianred',
-                        'lightpink', 'lightcoral', 'darkseagreen', 'teal', 'lightsalmon', 'tan', 'sandybrown', 'mediumorchid',
-                        'moccasin', 'lime', 'aqua', 'black', 'firebrick', 'darkslateblue', 'darkslategray', 'darksalmon',
-                        'cadetblue', 'darkgoldenrod', 'darkorchid', 'darkred', 'darkgreen', 'olive', 'gold', 'greenyellow', 'khaki',
-                        'purple', 'silver', 'mediumvioletred', 'chocolate', 'maroon', 'brown', 'orange', 'navy', 'red'];
-                    let colorCircleHTML = '';
-                    for (let i = 0; i < colorMapper?.length; i++) {
-                        colorCircleHTML += `<div class="color-circle" style="background-color: ${colorMapper[i]}; margin-top: 6px" onclick="setColor('${colorMapper[i]}')"></div>`;
-                    }
-                    document.getElementById('colors').innerHTML = colorCircleHTML;
-                    // to render colors
-
-                    function startDrawing(event) {
-                        isDrawing = true;
-                        ctx.beginPath();
-                        ctx.moveTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
-                    }
-
-                    function draw(event) {
-                        if (!isDrawing) return;
-                        if (color === "white") {
-                            ctx.lineWidth = eraserSize;
-                            ctx.strokeStyle = "white";
-                        } else {
-                            ctx.lineWidth = penThickness;
-                            ctx.strokeStyle = color;
-                        }
-                        ctx.lineTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
-                        ctx.stroke();
-                    }
-
-                    function stopDrawing() {
-                        if (isDrawing) {
-                            isDrawing = false;
-                            saveDrawing(); // Save the current drawing action
-                        }
-                    }
-                    // function to record the steps of pen
-                    function saveDrawing() {
-                        // When saving a drawing, create a copy of the canvas image data
-                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                        // Increment the current step index and store the drawing action
-                        currentStep++;
-                        drawingHistory = drawingHistory.slice(0, currentStep); // Discard redo history
-                        drawingHistory.push(imageData);
-                    }
-                    // undo function
-                    function undo() {
-                        if (currentStep >= 0) {
-                            currentStep--;
-                            ctx.clearRect(0, 0, canvas.width, canvas.height);
-                            ctx.putImageData(drawingHistory[currentStep], 0, 0);
-                        }
-                    }
-                    // redo function
-                    function redo() {
-                        if (currentStep < drawingHistory.length - 1) {
-                            currentStep++;
-                            ctx.clearRect(0, 0, canvas.width, canvas.height);
-                            ctx.putImageData(drawingHistory[currentStep], 0, 0);
-                        }
-                    }
-
-                    function setColor(newColor) {
-                        color = newColor;
-                    }
-
-                    function setPenThickness(thickness) {
-                        penThickness = thickness;
-                    }
-
-                    function setEraserSize(size) {
-                        eraserSize = size;
-                    }
-
-                    function setEraser() {
-                        color = "white";
-                        document.getElementById("eraserSize").value = 1;
-                        setEraserSize(1);
-                    }
-                    function zoomIn() {
-                        zoom += 0.05;
-                        document.body.style.transform = "scale(" + zoom + ")";
-                        document.body.style.transformOrigin = "top left"; // Add this line to set the transform origin
-                    }
-
-                    function zoomOut() {
-                        zoom -= 0.05;
-                        document.body.style.transform = "scale(" + zoom + ")";
-                        document.body.style.transformOrigin = "top left"; // Add this line to set the transform origin
-                    }
-
-                    function toggleDropdown() {
-                        const dropdown = document.getElementById('theme-dropdown');
-                        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-                    }
-
-                    function changeTheme() {
-                        const selectedOption = document.getElementById('theme-select').value;
-                        document.body.style.backgroundColor = selectedOption;
-                        document.getElementById('my-canvas').style.backgroundColor = selectedOption;
-                        // don't repeat the same code again and again
-                    }
-
-                    document.getElementById('theme-select').selectedIndex = 0;
-
-                    function toggleSoundDropdown() {
-                        const dropdown = document.getElementById('sound-dropdown');
-                        dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
-                    }
-                </script>
-
-                <script>
-                    const canvas = document.getElementById('canvas');
-                    const ctx = canvas.getContext('2d');
-                    const capacitySlider = document.getElementById('capacitySlider');
-                    function updatePenColor() {
-                        const capacity = capacitySlider.value;
-                        const currentColor = ctx.fillStyle;
-                        const updatedColor = currentColor.replace(/[^,]+(?=\))/, capacity / 100);
-                        ctx.fillStyle = updatedColor;
-                    }
-                    capacitySlider.addEventListener('input', updatePenColor);
-                </script>
             </div>
         </div>
+        <canvas id="canvas" height="600%" width="1300px"></canvas>
     </div>
+
+
+
+    <script>
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+        var isDrawing = false;
+        var color = "black";
+        var penThickness = 1;
+        var eraserSize = 1;
+        var zoom = 1;
+        var drawingHistory = [];
+        var currentStep = -1;
+        const capacitySlider = document.getElementById('capacitySlider');
+
+        canvas.addEventListener("mousedown", startDrawing);
+        canvas.addEventListener("mousemove", draw);
+        canvas.addEventListener("mouseup", stopDrawing);
+        canvas.addEventListener("mouseleave", stopDrawing);
+        function updatePenColor() {
+            const capacity = capacitySlider.value;
+            const currentColor = ctx.fillStyle;
+            const updatedColor = currentColor.replace(/[^,]+(?=\))/, capacity / 100);
+            ctx.fillStyle = updatedColor;
+        }
+        capacitySlider.addEventListener('input', updatePenColor);
+        // add colors if you want to add new color 
+        // to render colors
+        const colorMapper = ['white', 'lavender', 'lightblue', 'lightgreen', 'lightpink', 'yellow', 'peachpuff',
+            'thistle', 'lightgray', 'wheat', 'mistyrose', 'lavenderblush', 'indianred',
+            'lightpink', 'lightcoral', 'darkseagreen', 'teal', 'lightsalmon', 'tan', 'sandybrown', 'mediumorchid',
+            'moccasin', 'lime', 'aqua', 'black', 'firebrick', 'darkslateblue', 'darkslategray', 'darksalmon',
+            'cadetblue', 'darkgoldenrod', 'darkorchid', 'darkred', 'darkgreen', 'olive', 'gold', 'greenyellow', 'khaki',
+            'purple', 'silver', 'mediumvioletred', 'chocolate', 'maroon', 'brown', 'orange', 'navy', 'red'];
+        let colorCircleHTML = '';
+        for (let i = 0; i < colorMapper?.length; i++) {
+            colorCircleHTML += `<div class="color-circle" style="background-color: ${colorMapper[i]}; margin-top: 6px" onclick="setColor('${colorMapper[i]}')"></div>`;
+        }
+        document.getElementById('colors').innerHTML = colorCircleHTML;
+        // to render colors
+
+        function resizeCanvas() {
+            const canvas = document.getElementById("canvas");
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight * 0.8;
+        }
+
+        // Call the resizeCanvas function initially and whenever the window is resized
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        function startDrawing(event) {
+            isDrawing = true;
+            ctx.beginPath();
+            ctx.moveTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
+        }
+
+        function draw(event) {
+            if (!isDrawing) return;
+            if (color === "white") {
+                ctx.lineWidth = eraserSize;
+                ctx.strokeStyle = "white";
+            } else {
+                ctx.lineWidth = penThickness;
+                ctx.strokeStyle = color;
+            }
+            ctx.lineTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            if (isDrawing) {
+                isDrawing = false;
+                saveDrawing(); // Save the current drawing action
+            }
+        }
+        // function to record the steps of pen
+        function saveDrawing() {
+            // When saving a drawing, create a copy of the canvas image data
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            // Increment the current step index and store the drawing action
+            currentStep++;
+            drawingHistory = drawingHistory.slice(0, currentStep); // Discard redo history
+            drawingHistory.push(imageData);
+        }
+        // undo function
+        function undo() {
+            if (currentStep >= 0) {
+                currentStep--;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.putImageData(drawingHistory[currentStep], 0, 0);
+            }
+        }
+        // redo function
+        function redo() {
+            if (currentStep < drawingHistory.length - 1) {
+                currentStep++;
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.putImageData(drawingHistory[currentStep], 0, 0);
+            }
+        }
+
+        function setColor(newColor) {
+            color = newColor;
+        }
+
+        function setPenThickness(thickness) {
+            penThickness = thickness;
+        }
+
+        function setEraserSize(size) {
+            eraserSize = size;
+        }
+
+        function setEraser() {
+            color = "white";
+            document.getElementById("eraserSize").value = 1;
+            setEraserSize(1);
+        }
+        function zoomIn() {
+            zoom += 0.05;
+            document.body.style.transform = "scale(" + zoom + ")";
+            document.body.style.transformOrigin = "top left"; // Add this line to set the transform origin
+        }
+
+        function zoomOut() {
+            zoom -= 0.05;
+            document.body.style.transform = "scale(" + zoom + ")";
+            document.body.style.transformOrigin = "top left"; // Add this line to set the transform origin
+        }
+
+        function changeTheme(e) {
+            document.body.style.backgroundColor = e.target.value;
+            document.getElementById('my-canvas').style.backgroundColor = selectedOption;
+        }
+        document.getElementById('theme-select').selectedIndex = 0;
+
+        function toggleSoundDropdown() {
+            const dropdown = document.getElementById('sound-dropdown');
+            dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
 </body>
 
 </html>
