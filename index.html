@@ -149,6 +149,7 @@
                 <button onclick="zoomOut()" class="eraser-button">-</button>
                 <button onclick="undo()" class="eraser-button">↺</button>
                 <button onclick="redo()" class="eraser-button">↻</button>
+                <button onclick="saveAsImage()" class="eraser-button">Save as Image</button>
                 <select id="theme-select" onchange="changeTheme(event)" class="eraser-button" style="outline:none">
                     <option value="" selected disabled>Select Theme</option>
                     <option value="white">Light</option>
@@ -305,6 +306,20 @@
         function toggleSoundDropdown() {
             const dropdown = document.getElementById('sound-dropdown');
             dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+        }
+        function saveAsImage() {
+            var imageCanvas = document.createElement('canvas');
+            imageCanvas.width = canvas.width;
+            imageCanvas.height = canvas.height;
+            var imageContext = imageCanvas.getContext('2d');
+            imageContext.fillStyle = 'white';
+            imageContext.fillRect(0, 0, imageCanvas.width, imageCanvas.height);
+            imageContext.drawImage(canvas, 0, 0);
+            var link = document.createElement('a');
+            link.download = 'drawing.png';
+            var dataURL = imageCanvas.toDataURL('image/png');
+            link.href = dataURL;
+            link.click();
         }
     </script>
 </body>
